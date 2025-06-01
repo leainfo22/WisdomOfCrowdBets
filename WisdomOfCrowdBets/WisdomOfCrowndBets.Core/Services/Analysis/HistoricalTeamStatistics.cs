@@ -17,25 +17,39 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
             List<TeamStatistic> teamStatistics = new List<TeamStatistic>();
             try
             {
-                var teamStats = listHistoricalDataXlsx
-                    .SelectMany(x => new[]
-                    {
-                        new { Team = x.HomeTeam, IsHome = true, IsWinner = x.Winner == x.HomeTeam },
-                        new { Team = x.AwayTeam, IsHome = false, IsWinner = x.Winner == x.AwayTeam }
-                    })
-                    .GroupBy(x => x.Team)
-                    .Select(g => new
-                    {
-                        Team = g.Key,
-                        HomeWins = g.Count(x => x.IsHome && x.IsWinner),
-                        AwayWins = g.Count(x => !x.IsHome && x.IsWinner)
-                    })
-                    .ToList();
+                // Get all unique team names
+                var allTeams = listHistoricalDataXlsx
+                    .SelectMany(x => new[] { x.HomeTeam, x.AwayTeam })
+                    .Where(t => !string.IsNullOrEmpty(t))
+                    .Distinct();
 
-                foreach (var stat in teamStats)
+                foreach (var team in allTeams)
                 {
-                    Console.WriteLine($"Team: {stat.Team}, Home Wins: {stat.HomeWins}, Away Wins: {stat.AwayWins}");
+                    // Matches played as home or away
+                    int matchesPlayed = listHistoricalDataXlsx.Count(x => x.HomeTeam == team || x.AwayTeam == team);
+
+                    // Wins as home
+                    int homeWins = listHistoricalDataXlsx.Count(x => x.HomeTeam == team && x.Winner == "Home");
+                    // Wins as away
+                    int awayWins = listHistoricalDataXlsx.Count(x => x.AwayTeam == team && x.Winner == "Away");
+                    int totalWins = homeWins + awayWins;
+
+                    // Losses: played - wins
+                    int losses = matchesPlayed - totalWins;
+
+                    teamStatistics.Add(new TeamStatistic
+                    {
+                        team_name = team,
+                        matches_played = matchesPlayed,
+                        wins = totalWins,
+                        losses = losses,
+                        home_wins = homeWins,
+                        away_wins = awayWins
+                    });
+
+                    Console.WriteLine($"Team: {team}, Played: {matchesPlayed}, Wins: {totalWins}, Losses: {losses}, Home Wins: {homeWins}, Away Wins: {awayWins}");
                 }
+
                 return teamStatistics;
             }
             catch (Exception ex)
