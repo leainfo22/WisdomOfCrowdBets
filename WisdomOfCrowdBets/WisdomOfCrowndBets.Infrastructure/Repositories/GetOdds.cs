@@ -6,7 +6,7 @@ using WisdomOfCrowndBets.Core.Interfaces;
 
 namespace WisdomOfCrowndBets.Infrastructure.Repositories
 {
-    public class OddsApi : IOddsApi
+    public class GetOdds : IGetOdds
     {
         private static readonly HttpClient _client = new HttpClient();
 
@@ -39,13 +39,13 @@ namespace WisdomOfCrowndBets.Infrastructure.Repositories
                 }
                 else
                 {
-                    Console.WriteLine($"Error calling API: {response.StatusCode} - {response.ReasonPhrase}");
+                    //Console.WriteLine($"Error calling API: {response.StatusCode} - {response.ReasonPhrase}");
                     return result; 
                 }
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($"HTTP Request Exception: {e.Message}");
+                //Console.WriteLine($"HTTP Request Exception: {e.Message}");
                 return result;
             }
         }

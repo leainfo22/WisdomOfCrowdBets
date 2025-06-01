@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WisdomOfCrowndBets.Core.DTO
 {
-    public class Xml
+    public class Xlsx
     {
-        public string? XlmPath { get; set; }
+        public string? XlsxPath { get; set; }
     }
 }

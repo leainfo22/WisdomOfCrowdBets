@@ -9,8 +9,9 @@ using WisdomOfCrowndBets.Infrastructure.Repositories;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        services.AddSingleton<IOddsApi, OddsApi>();
-        services.AddSingleton<IGetData, GetData>();
+        services.AddSingleton<IGetOdds, GetOdds>();
+        services.AddSingleton<IGetApiData, GetApiData>(); 
+        services.AddSingleton<IGetXlsxHistoricalData, GetXmlHistoricalData>();
         services.AddHostedService<Worker>();
 
     }).Build();

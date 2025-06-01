@@ -1,22 +1,28 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 using WisdomOfCrowndBets.Core.DTO;
+using WisdomOfCrowndBets.Core.DTO.Api;
 using WisdomOfCrowndBets.Core.Interfaces;
+using WisdomOfCrowndBets.Core.Services;
 
 namespace WisdomOfCrowdBets
 {
     public class Worker : BackgroundService
     {
         private readonly ApiOddsConfig _apiGetOdds;
-        private readonly Xml _xml;
+        private readonly Xlsx _xlsx;
         private readonly IConfiguration _configuration;
-        private readonly IGetData _getData;
-        public Worker(IConfiguration configuration, IGetData getData)
+        private readonly IGetApiData _getApiData;
+        private readonly IGetXlsxHistoricalData _getXlsxHistoricalData;
+
+        public Worker(IConfiguration configuration, IGetApiData getApiData, IGetXlsxHistoricalData getXlsxHistoricalData)
         {
             _configuration = configuration;
-            _getData = getData;
+            _getApiData = getApiData;
+            _getXlsxHistoricalData = getXlsxHistoricalData;
             _apiGetOdds = _configuration.GetSection("ApiGetOdds").Get<ApiOddsConfig>();
-            _xml = _configuration.GetSection("XmlPath").Get<Xml>();
+            _xlsx = _configuration.GetSection("Xlsx").Get<Xlsx>();
 
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,7 +31,8 @@ namespace WisdomOfCrowdBets
             {
                 try
                 {
-                    await _getData.GetApiData(_apiGetOdds);
+                    var xlsxData = await _getXlsxHistoricalData.GetExelData(_xlsx);
+                    List<EventDTO> listEvent = await _getApiData.GetData(_apiGetOdds);
                 }
                 catch (Exception ex)
                 {
