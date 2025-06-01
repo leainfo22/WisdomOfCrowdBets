@@ -7,9 +7,9 @@ namespace WisdomOfCrowndBets.Core.Services
 {
     public class GetXmlHistoricalData : IGetXlsxHistoricalData
     {
-        public async Task<List<HistoricalDataXlm>> GetExelData(Xlsx xlsx)
+        public async Task<List<HistoricalDataXlsx>> GetExelData(Xlsx xlsx)
         {
-            var data = new List<HistoricalDataXlm>();
+            var data = new List<HistoricalDataXlsx>();
             if (string.IsNullOrWhiteSpace(xlsx?.XlsxPath))
             {
                 Console.WriteLine("Error: XlsxPath is null or empty.");
@@ -24,7 +24,7 @@ namespace WisdomOfCrowndBets.Core.Services
 
                     if (sheet != null)
                     {
-                        int[] columnIndices = { 0, 2, 3, 12, 13 };
+                        int[] columnIndices = { 0,2,3,5,6,12,13 };
 
                         var headerRow = sheet.GetRow(sheet.FirstRowNum+1);
                         string[] headers = columnIndices.Select(i => headerRow?.GetCell(i)?.ToString() ?? $"Column_{i + 1}").ToArray();
@@ -39,8 +39,11 @@ namespace WisdomOfCrowndBets.Core.Services
                             string? dateStr = row.GetCell(columnIndices[0])?.ToString();
                             string? homeTeam = row.GetCell(columnIndices[1])?.ToString();
                             string? awayTeam = row.GetCell(columnIndices[2])?.ToString();
-                            string? homeOddsStr = row.GetCell(columnIndices[3])?.ToString();
-                            string? awayOddsStr = row.GetCell(columnIndices[4])?.ToString();
+                            string? homeScoreStr = row.GetCell(columnIndices[3])?.ToString();
+                            string? awayScoreStr = row.GetCell(columnIndices[4])?.ToString();
+                            string? homeOddsStr = row.GetCell(columnIndices[5])?.ToString();
+                            string? awayOddsStr = row.GetCell(columnIndices[6])?.ToString();
+
 
                             if (!DateTime.TryParse(dateStr, out var date))
                                 continue;
@@ -48,15 +51,35 @@ namespace WisdomOfCrowndBets.Core.Services
                                 homeOdds = 0;
                             if (!decimal.TryParse(awayOddsStr, out var awayOdds))
                                 awayOdds = 0;
+                            if (!int.TryParse(homeScoreStr, out var homeScore))
+                                homeScore = 0;
+                            if (!int.TryParse(awayScoreStr, out var awayScore))
+                                awayScore = 0;
+                            string winner = string.Empty;
+                            string losser = string.Empty;
 
-                            data.Add(new HistoricalDataXlm
+                            //no draw
+                            if (homeScore < awayScore)
                             {
-                                Date = date,
-                                HomeTeam = homeTeam,
-                                AwayTeam = awayTeam,
-                                HomeOdds = homeOdds,
-                                AwayOdds = awayOdds
-                            });
+                                winner = "Home";
+                                losser = "Away";
+                            }
+                            else 
+                            {
+                                winner = "Away";
+                                losser = "Home";    
+                            }
+
+                            data.Add(new HistoricalDataXlsx
+                                {
+                                    Date = date,
+                                    HomeTeam = homeTeam,
+                                    AwayTeam = awayTeam,
+                                    Winner = winner,
+                                    Losser = losser,
+                                    HomeOdds = homeOdds,
+                                    AwayOdds = awayOdds
+                                });
                         }
                     }
                     else

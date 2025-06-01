@@ -3,8 +3,11 @@ using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using WisdomOfCrowndBets.Core.DTO;
 using WisdomOfCrowndBets.Core.DTO.Api;
+using WisdomOfCrowndBets.Core.DTO.Team;
 using WisdomOfCrowndBets.Core.Interfaces;
+using WisdomOfCrowndBets.Core.Interfaces.Analysis;
 using WisdomOfCrowndBets.Core.Services;
+using WisdomOfCrowndBets.Core.Services.Analysis;
 
 namespace WisdomOfCrowdBets
 {
@@ -16,28 +19,34 @@ namespace WisdomOfCrowdBets
         private readonly IGetApiData _getApiData;
         private readonly IGetXlsxHistoricalData _getXlsxHistoricalData;
 
-        public Worker(IConfiguration configuration, IGetApiData getApiData, IGetXlsxHistoricalData getXlsxHistoricalData)
+        private readonly IAverageOdds _averageOdds;
+        private readonly IHistoricalTeamStatistics _historicalTeamStatistics;
+
+        public Worker(  IConfiguration configuration, 
+                        IGetApiData getApiData, 
+                        IGetXlsxHistoricalData getXlsxHistoricalData,
+                        IAverageOdds averageOdds,
+                        IHistoricalTeamStatistics historicalTeamStatistics)
         {
             _configuration = configuration;
             _getApiData = getApiData;
             _getXlsxHistoricalData = getXlsxHistoricalData;
+            _averageOdds = averageOdds;
+            _historicalTeamStatistics = historicalTeamStatistics;
             _apiGetOdds = _configuration.GetSection("ApiGetOdds").Get<ApiOddsConfig>();
             _xlsx = _configuration.GetSection("Xlsx").Get<Xlsx>();
+
 
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
-            {
-                try
-                {
-                    var xlsxData = await _getXlsxHistoricalData.GetExelData(_xlsx);
-                    List<EventDTO> listEvent = await _getApiData.GetData(_apiGetOdds);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+            {       
+                List<EventDTO> listEvent = await _getApiData.GetData(_apiGetOdds);
+                var xlsxData = await _getXlsxHistoricalData.GetExelData(_xlsx);
+                await _averageOdds.CalculateAvaregeOdds(listEvent);
+                List<TeamStatistic> teamStatistic = await _historicalTeamStatistics.CalculateHistoricalTeamStatistics(xlsxData);
+
             }
 
         }

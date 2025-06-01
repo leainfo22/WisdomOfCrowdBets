@@ -1,17 +1,20 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WisdomOfCrowdBets;
 using WisdomOfCrowndBets.Core.Interfaces;
+using WisdomOfCrowndBets.Core.Interfaces.Analysis;
 using WisdomOfCrowndBets.Core.Services;
+using WisdomOfCrowndBets.Core.Services.Analysis;
 using WisdomOfCrowndBets.Infrastructure.Repositories;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddSingleton<IGetOdds, GetOdds>();
-        services.AddSingleton<IGetApiData, GetApiData>(); 
+        services.AddSingleton<IGetApiData, GetApiData>();
         services.AddSingleton<IGetXlsxHistoricalData, GetXmlHistoricalData>();
+        services.AddSingleton<IAverageOdds, AverageOdds>();
+        services.AddSingleton<IHistoricalTeamStatistics,HistoricalTeamStatistics>();
         services.AddHostedService<Worker>();
 
     }).Build();

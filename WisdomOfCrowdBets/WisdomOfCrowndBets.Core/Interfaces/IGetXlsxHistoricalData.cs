@@ -9,7 +9,7 @@ namespace WisdomOfCrowndBets.Core.Interfaces
 {
     public interface IGetXlsxHistoricalData
     {
-        public Task<List<HistoricalDataXlm>> GetExelData(Xlsx xml);
+        public Task<List<HistoricalDataXlsx>> GetExelData(Xlsx xml);
 
     }
 }
