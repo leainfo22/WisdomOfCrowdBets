@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/WisdomOfCrowdBets/.vs
+/WisdomOfCrowdBets/WisdomOfCrowdBets/bin/Debug/net8.0
+/WisdomOfCrowdBets/WisdomOfCrowdBets/obj
+/WisdomOfCrowdBets/WisdomOfCrowndBets.Core/bin/Debug/net8.0
+/WisdomOfCrowdBets/WisdomOfCrowndBets.Core/obj
+/WisdomOfCrowdBets/WisdomOfCrowndBets.Infrastructure/bin/Debug/net8.0
+/WisdomOfCrowdBets/WisdomOfCrowndBets.Infrastructure/obj
