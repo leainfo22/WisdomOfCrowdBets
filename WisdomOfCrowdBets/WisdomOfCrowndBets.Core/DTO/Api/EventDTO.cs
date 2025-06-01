@@ -18,6 +18,8 @@ namespace WisdomOfCrowndBets.Core.DTO.Api
         public float? avg_away_odd { get; set; }
         public float? avg_home_odd_implied_probability { get; set; }
         public float? avg_away_odd_implied_probability { get; set; }
+        public double? probability_home_win { get; set; }
+        public double? probability_away_win { get; set; }
         public List<Bookmaker> bookmakers { get; set; }
     }
 }

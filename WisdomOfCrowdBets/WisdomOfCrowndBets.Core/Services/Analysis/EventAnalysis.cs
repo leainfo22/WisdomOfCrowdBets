@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WisdomOfCrowndBets.Core.DTO.Api;
+using WisdomOfCrowndBets.Core.DTO.Team;
 using WisdomOfCrowndBets.Core.Interfaces.Analysis;
 
 namespace WisdomOfCrowndBets.Core.Services.Analysis
 {
-    public class AverageOdds : IAverageOdds
+    public class EventAnalysis : IEventAnalysis
     {
         public async Task CalculateAvaregeOdds(List<EventDTO> listEvent) 
         {
@@ -41,6 +42,15 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async Task CalculateHomeAwayWinrate(List<EventDTO> listEvent, List<TeamStatistic> listTeams) 
+        {
+            foreach (var ev in listEvent)
+            {
+                var teamStat = listTeams.FirstOrDefault(t => t.team_name == ev.home_team);
+                ev.probability_home_win = teamStat?.WinRate;
             }
         }
 

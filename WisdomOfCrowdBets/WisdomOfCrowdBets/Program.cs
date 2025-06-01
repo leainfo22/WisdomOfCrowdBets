@@ -13,8 +13,10 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IGetOdds, GetOdds>();
         services.AddSingleton<IGetApiData, GetApiData>();
         services.AddSingleton<IGetXlsxHistoricalData, GetXmlHistoricalData>();
-        services.AddSingleton<IAverageOdds, AverageOdds>();
+        services.AddSingleton<IEventAnalysis, EventAnalysis>();
         services.AddSingleton<IHistoricalTeamStatistics,HistoricalTeamStatistics>();
+        services.AddSingleton<IMatchNames, MatchNames>();
+
         services.AddHostedService<Worker>();
 
     }).Build();

@@ -15,5 +15,13 @@ namespace WisdomOfCrowndBets.Core.DTO.Team
         public int home_wins { get; set; }
         public int away_wins { get; set; }
 
+        public double WinRate
+        {
+            get
+            {
+                if (matches_played == 0) return 0;
+                return (double)wins / matches_played * 100;
+            }
+        }
     }
 }

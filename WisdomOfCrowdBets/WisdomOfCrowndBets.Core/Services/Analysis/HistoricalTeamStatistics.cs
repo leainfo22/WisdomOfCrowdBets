@@ -25,16 +25,14 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
 
                 foreach (var team in allTeams)
                 {
-                    // Matches played as home or away
+                    //we can calculate the total of matches played as home and away.
+                    //here is calculated the total of matches played by the team, both home and away.
                     int matchesPlayed = listHistoricalDataXlsx.Count(x => x.HomeTeam == team || x.AwayTeam == team);
 
-                    // Wins as home
                     int homeWins = listHistoricalDataXlsx.Count(x => x.HomeTeam == team && x.Winner == "Home");
-                    // Wins as away
                     int awayWins = listHistoricalDataXlsx.Count(x => x.AwayTeam == team && x.Winner == "Away");
                     int totalWins = homeWins + awayWins;
 
-                    // Losses: played - wins
                     int losses = matchesPlayed - totalWins;
 
                     teamStatistics.Add(new TeamStatistic

@@ -1,0 +1,31 @@
+St Kilda Saints,St Kilda
+Melbourne Demons,Melbourne
+Adelaide Crows,Adelaide
+Fremantle Dockers,Fremantle
+North Melbourne Kangaroos,North Melbourne
+Hawthorn Hawks,Hawthorn
+Carlton Blues,Carlton
+Essendon Bombers,Essendon
+Geelong Cats,Geelong
+West Coast Eagles,West Coast
+Brisbane Lions,Brisbane
+Richmond Tigers,Richmond
+Western Bulldogs,Western Bulldogs
+Greater Western Sydney Giants,GWS Giants
+Port Adelaide Power,Port Adelaide
+Collingwood Magpies,Collingwood
+Sydney Swans,Sydney
+Gold Coast Suns,Gold Coast
+
+
+
+
+
+
+
+
+      
+
+
+
+
