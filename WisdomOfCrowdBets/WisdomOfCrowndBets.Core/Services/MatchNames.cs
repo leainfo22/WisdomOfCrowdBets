@@ -17,10 +17,18 @@ namespace WisdomOfCrowndBets.Core.Services
                                         .Select(line => line.Split(',', 2))
                                         .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
 
-            foreach (var evento in listEvent)
+            foreach (var ev in listEvent)
             {
-                if (evento.bookmakers == null) continue;
-                foreach (var bookmaker in evento.bookmakers)
+                if (ev.home_team != null && replacements.TryGetValue(ev.home_team, out var newName1))
+                {
+                    ev.home_team = newName1;
+                }
+                if (ev.away_team != null && replacements.TryGetValue(ev.away_team, out var newName2))
+                {
+                    ev.away_team = newName2;
+                }
+                if (ev.bookmakers == null) continue;
+                foreach (var bookmaker in ev.bookmakers)
                 {
                     if (bookmaker.markets == null) continue;
                     foreach (var market in bookmaker.markets)
@@ -28,9 +36,9 @@ namespace WisdomOfCrowndBets.Core.Services
                         if (market.outcomes == null) continue;
                         foreach (var outcome in market.outcomes)
                         {
-                            if (outcome.name != null && replacements.TryGetValue(outcome.name, out var newName))
+                            if (outcome.name != null && replacements.TryGetValue(outcome.name, out var newName3))
                             {
-                                outcome.name = newName;
+                                outcome.name = newName3;
                             }
                         }
                     }

@@ -49,8 +49,10 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
         {
             foreach (var ev in listEvent)
             {
-                var teamStat = listTeams.FirstOrDefault(t => t.team_name == ev.home_team);
-                ev.probability_home_win = teamStat?.WinRate;
+                var teamHomeStat = listTeams.FirstOrDefault(t => t.team_name == ev.home_team);
+                ev.probability_home_win = teamHomeStat?.WinRate;
+                var teamAwayStat = listTeams.FirstOrDefault(t => t.team_name == ev.away_team);
+                ev.probability_home_win = teamAwayStat?.WinRate;
             }
         }
 
