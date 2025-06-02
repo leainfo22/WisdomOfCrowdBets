@@ -16,10 +16,11 @@ namespace WisdomOfCrowdBets
         private readonly ApiOddsConfig _apiGetOdds;
         private readonly Xlsx _xlsx;
         private readonly AFLFile _file;
+        private readonly Bets _bets;
         private readonly IConfiguration _configuration;
         private readonly IGetApiData _getApiData;
         private readonly IGetXlsxHistoricalData _getXlsxHistoricalData;
-        private readonly IEventAnalysis _averageOdds;
+        private readonly IEventAnalysis _eventAnalysis;
         private readonly IHistoricalTeamStatistics _historicalTeamStatistics;
         private readonly IMatchNames _matchNames;
 
@@ -27,21 +28,21 @@ namespace WisdomOfCrowdBets
         public Worker(  IConfiguration configuration, 
                         IGetApiData getApiData, 
                         IGetXlsxHistoricalData getXlsxHistoricalData,
-                        IEventAnalysis averageOdds,
+                        IEventAnalysis eventAnalysis,
                         IHistoricalTeamStatistics historicalTeamStatistics,
                         IMatchNames matchNames)
         {
             _configuration = configuration;
             _getApiData = getApiData;
             _getXlsxHistoricalData = getXlsxHistoricalData;
-            _averageOdds = averageOdds;
+            _eventAnalysis = eventAnalysis;
             _historicalTeamStatistics = historicalTeamStatistics;
             _matchNames = matchNames;
 
             _apiGetOdds = _configuration.GetSection("ApiGetOdds").Get<ApiOddsConfig>();
             _xlsx = _configuration.GetSection("Xlsx").Get<Xlsx>();
             _file = _configuration.GetSection("File").Get<AFLFile>();
-
+            _bets = _configuration.GetSection("Bets").Get<Bets>();
 
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -51,11 +52,13 @@ namespace WisdomOfCrowdBets
                 List<EventDTO> listEvent = await _getApiData.GetData(_apiGetOdds);
                 List<HistoricalDataXlsx> xlsxData = await _getXlsxHistoricalData.GetExelData(_xlsx);
                 await _matchNames.MatchTeamsNames(_file.AFLFilePath, listEvent);
-                await _averageOdds.CalculateAvaregeOdds(listEvent);
+                await _eventAnalysis.CalculateAvaregeOdds(listEvent);
                 List<TeamStatistic> teamStatistic = await _historicalTeamStatistics.CalculateHistoricalTeamStatistics(xlsxData);
-                await _averageOdds.CalculateHomeAwayWinrate(listEvent, teamStatistic);
+                await _eventAnalysis.CalculateHomeAwayWinrate(listEvent, teamStatistic);
+                await _eventAnalysis.EstimateProfit(listEvent, _bets);
+                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); // Delay to avoid continuous execution
+            
             }
-
         }
     }
 }

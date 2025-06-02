@@ -1,8 +1,12 @@
-﻿using System;
+﻿using MathNet.Numerics.Distributions;
+using NPOI.Util;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WisdomOfCrowndBets.Core.DTO;
 using WisdomOfCrowndBets.Core.DTO.Api;
 using WisdomOfCrowndBets.Core.DTO.Team;
 using WisdomOfCrowndBets.Core.Interfaces.Analysis;
@@ -56,5 +60,31 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
             }
         }
 
+        public async Task EstimateProfit(List<EventDTO> listEvent, Bets bets) 
+        {
+            float fee = float.Parse(bets.Fee);
+            string[] amountsArray = bets.Amounts.Split(',');
+            foreach (var ev in listEvent) 
+            {
+                float least_avg_odd = 0;
+                if (ev.avg_away_odd < ev.avg_home_odd)                
+                    least_avg_odd = (float)ev.avg_away_odd;                
+                else
+                    least_avg_odd = (float)ev.avg_home_odd;
+                Console.WriteLine($"Match: {ev.home_team} v/s {ev.away_team} ");
+                foreach (string am in amountsArray)
+                {
+                    if (int.TryParse(am.Trim(), out int number))
+                    {
+                        var grossProfit = (least_avg_odd * number) - number;
+                        // Calculate the house fee amount
+                        var houseFeeAmount = (fee / 100) * grossProfit;
+                        // Calculate the net profit
+                        var netProfit = grossProfit - houseFeeAmount;
+                        Console.WriteLine($"Amount bet: {number} Profit: {netProfit}");
+                    }                    
+                }                
+            }
+        }
     }
 }

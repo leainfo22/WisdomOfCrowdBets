@@ -13,6 +13,7 @@ namespace WisdomOfCrowndBets.Core.Interfaces.Analysis
     {
         public Task CalculateAvaregeOdds(List<EventDTO> listEvent);
         public Task CalculateHomeAwayWinrate(List<EventDTO> listEvent,List<TeamStatistic> listTeams);
+        public Task EstimateProfit(List<EventDTO> listEvent, Bets bets);
 
     }
 }
