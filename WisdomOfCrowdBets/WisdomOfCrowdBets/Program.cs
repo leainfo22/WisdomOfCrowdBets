@@ -16,6 +16,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IEventAnalysis, EventAnalysis>();
         services.AddSingleton<IHistoricalTeamStatistics,HistoricalTeamStatistics>();
         services.AddSingleton<IMatchNames, MatchNames>();
+        services.AddSingleton<ISendEmail, SendEmail>();
 
         services.AddHostedService<Worker>();
 

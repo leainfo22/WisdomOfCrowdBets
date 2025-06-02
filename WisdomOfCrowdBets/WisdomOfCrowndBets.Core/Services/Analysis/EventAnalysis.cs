@@ -9,12 +9,19 @@ using System.Threading.Tasks;
 using WisdomOfCrowndBets.Core.DTO;
 using WisdomOfCrowndBets.Core.DTO.Api;
 using WisdomOfCrowndBets.Core.DTO.Team;
+using WisdomOfCrowndBets.Core.Interfaces;
 using WisdomOfCrowndBets.Core.Interfaces.Analysis;
 
 namespace WisdomOfCrowndBets.Core.Services.Analysis
 {
     public class EventAnalysis : IEventAnalysis
     {
+        private readonly ISendEmail _sendEmail;
+
+        public EventAnalysis(ISendEmail sendEmail)
+        {
+            _sendEmail = sendEmail;
+        }
         public async Task CalculateAvaregeOdds(List<EventDTO> listEvent) 
         {
             try
@@ -84,6 +91,36 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
                         Console.WriteLine($"Amount bet: {number} Profit: {netProfit}");
                     }                    
                 }                
+            }
+        }
+
+        public async Task ValuableBetNotification(List<EventDTO> listEvent, Email email) 
+        {
+            string message = string.Empty;
+            //when average odds imply a higher probability than a single bookmaker’s odds
+            foreach (var ev in listEvent) 
+            {
+                foreach (var book in ev.bookmakers) 
+                {
+                    foreach(var market in book.markets)
+                    {
+                        foreach (var outcome in market.outcomes)
+                        {
+                            if (outcome.name == ev.home_team && ev.avg_home_odd_implied_probability > outcome.price)
+                            {
+                                message += $"Valuable Bet in {market.key}: {ev.home_team} with avg odd {ev.avg_home_odd} and implied probability {ev.avg_home_odd_implied_probability} \n";
+                            }
+                            else if (outcome.name == ev.away_team && ev.avg_away_odd_implied_probability > outcome.price)
+                            {
+                                message += $"Valuable Bet in {market.key}: {ev.away_team} with avg odd {ev.avg_away_odd} and implied probability {ev.avg_away_odd_implied_probability}\n";
+                            }
+                        }
+                    }
+                }
+            }
+            if(!String.IsNullOrEmpty(message))
+            {
+                _sendEmail.SentBetEmailNotification(message, email);
             }
         }
     }

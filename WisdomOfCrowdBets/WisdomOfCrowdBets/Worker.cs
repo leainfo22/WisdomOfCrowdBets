@@ -17,6 +17,7 @@ namespace WisdomOfCrowdBets
         private readonly Xlsx _xlsx;
         private readonly AFLFile _file;
         private readonly Bets _bets;
+        private readonly Email _email;
         private readonly IConfiguration _configuration;
         private readonly IGetApiData _getApiData;
         private readonly IGetXlsxHistoricalData _getXlsxHistoricalData;
@@ -43,6 +44,7 @@ namespace WisdomOfCrowdBets
             _xlsx = _configuration.GetSection("Xlsx").Get<Xlsx>();
             _file = _configuration.GetSection("File").Get<AFLFile>();
             _bets = _configuration.GetSection("Bets").Get<Bets>();
+            _email = _configuration.GetSection("Email").Get<Email>();
 
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -56,6 +58,7 @@ namespace WisdomOfCrowdBets
                 List<TeamStatistic> teamStatistic = await _historicalTeamStatistics.CalculateHistoricalTeamStatistics(xlsxData);
                 await _eventAnalysis.CalculateHomeAwayWinrate(listEvent, teamStatistic);
                 await _eventAnalysis.EstimateProfit(listEvent, _bets);
+                await _eventAnalysis.ValuableBetNotification(listEvent, _email);
                 await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); // Delay to avoid continuous execution
             
             }
