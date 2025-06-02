@@ -12,8 +12,8 @@ namespace WisdomOfCrowndBets.Core.DTO
         public string? emailSubject     {get;set;}
         public string? emailBody        {get;set;}
         public string? fromEmail        {get;set;}
-        public string? smtpHost         {get; set;}
-        public int smtpPortNumber       {get; set;}
+        public string? smtpServer         {get; set;}
+        public int smtpPort { get; set;}
 
     }
 }

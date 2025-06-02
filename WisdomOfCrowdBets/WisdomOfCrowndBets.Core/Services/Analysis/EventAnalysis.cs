@@ -118,9 +118,10 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
                     }
                 }
             }
-            if(!String.IsNullOrEmpty(message))
+            //message = "Test";
+            if (!String.IsNullOrEmpty(message))
             {
-                _sendEmail.SentBetEmailNotification(message, email);
+                await _sendEmail.SentBetEmailNotification(message, email);
             }
         }
     }

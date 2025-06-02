@@ -22,15 +22,21 @@ namespace WisdomOfCrowndBets.Infrastructure.Repositories
                     mailMessage.Body = String.Format(emailData.emailBody,message);
                     mailMessage.IsBodyHtml = true;
 
-                    using (SmtpClient smtpClient = new SmtpClient(emailData.smtpHost, emailData.smtpPortNumber))
+                    using (SmtpClient smtpClient = new SmtpClient(emailData.smtpServer, emailData.smtpPort))
                     {
                         smtpClient.EnableSsl = true;
-                        smtpClient.Credentials = new NetworkCredential(emailData.fromEmail, "tsuv odeo ujyd keml");
+                        smtpClient.Credentials = new NetworkCredential(emailData.fromEmail, "tsuvodeoujydkeml");
+                        smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
                         await smtpClient.SendMailAsync(mailMessage);
                         Console.WriteLine("Email sent successfully via Gmail!");
                     }
                 }
+            }
+            catch (SmtpException ex) // Catch specific SmtpException for SMTP-related errors
+            {
+                Console.WriteLine($"SMTP Error sending email: {ex.StatusCode} - {ex.Message}");
+                // You might want to log more details here
             }
             catch (Exception ex)
             {
