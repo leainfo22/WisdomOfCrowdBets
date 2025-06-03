@@ -45,7 +45,7 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
                         away_wins = awayWins
                     });
 
-                    Console.WriteLine($"Team: {team}, Played: {matchesPlayed}, Wins: {totalWins}, Losses: {losses}, Home Wins: {homeWins}, Away Wins: {awayWins}");
+                    //Console.WriteLine($"Team: {team}, Played: {matchesPlayed}, Wins: {totalWins}, Losses: {losses}, Home Wins: {homeWins}, Away Wins: {awayWins}");
                 }
 
                 return teamStatistics;

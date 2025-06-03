@@ -48,16 +48,26 @@ namespace WisdomOfCrowdBets
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
-            {       
+            {   
+                //Get data from the API
                 List<EventDTO> listEvent = await _getApiData.GetData(_apiGetOdds);
+                //Get data from the XLSX file that was downloaded in
                 List<HistoricalDataXlsx> xlsxData = await _getXlsxHistoricalData.GetExelData(_xlsx);
+                //Normalize team names in the XLSX file and match them with the API data
                 await _matchNames.MatchTeamsNames(_file.AFLFilePath, listEvent);
+                //Calculate average odds for each outcome - Home and Away (No draw in AFL API GET)
+                //And convert average odds to implied probabilities
                 await _eventAnalysis.CalculateAvaregeOdds(listEvent);
                 List<TeamStatistic> teamStatistic = await _historicalTeamStatistics.CalculateHistoricalTeamStatistics(xlsxData);
+                //Calculate home and away win rates based on historical data to compare with implied probabilities
                 await _eventAnalysis.CalculateHomeAwayWinrate(listEvent, teamStatistic);
+                //Simulate betting on the outcome with the lowest average odds (10,50,100,500,1000 AUD)
+                //%5 fee is applied to the profit -  (Betfair -  most sport )
                 await _eventAnalysis.EstimateProfit(listEvent, _bets);
+                //Notify if the average odds imply a higher probability than a single bookmaker’s odds
                 await _eventAnalysis.ValuableBetNotification(listEvent, _email);
-                // Delay to avoid continuous execution
+                // Delay to avoid continuous execution - It could be adjusted based on the API rate limits or requirements
+                //or depending on how often you want to run the analysis
                 await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); 
             
             }

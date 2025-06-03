@@ -38,7 +38,7 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
                     ev.avg_away_odd = (awayPrices != null && awayPrices.Any()) ? (float?)awayPrices.Average() : null;
                     ev.avg_away_odd_implied_probability = ev.avg_away_odd.HasValue ? 1 / ev.avg_away_odd.Value : null;
                     ev.avg_home_odd_implied_probability = ev.avg_home_odd.HasValue ? 1 / ev.avg_home_odd.Value : null;
-                    Console.WriteLine(homePrices);
+                    //Console.WriteLine(homePrices);
                 }
 
             }
@@ -70,7 +70,7 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
                     least_avg_odd = (float)ev.avg_away_odd;                
                 else
                     least_avg_odd = (float)ev.avg_home_odd;
-                Console.WriteLine($"Match: {ev.home_team} v/s {ev.away_team} ");
+                //Console.WriteLine($"Match: {ev.home_team} v/s {ev.away_team} ");
                 foreach (string am in amountsArray)
                 {
                     if (int.TryParse(am.Trim(), out int number))
@@ -80,7 +80,7 @@ namespace WisdomOfCrowndBets.Core.Services.Analysis
                         var houseFeeAmount = (fee / 100) * grossProfit;
                         // Calculate the net profit
                         var netProfit = grossProfit - houseFeeAmount;
-                        Console.WriteLine($"Amount bet: {number} Profit: {netProfit}");
+                        //Console.WriteLine($"Amount bet: {number} Profit: {netProfit}");
                     }                    
                 }                
             }
