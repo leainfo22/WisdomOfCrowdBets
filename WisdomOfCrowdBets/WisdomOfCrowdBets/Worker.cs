@@ -57,7 +57,8 @@ namespace WisdomOfCrowdBets
                 await _eventAnalysis.CalculateHomeAwayWinrate(listEvent, teamStatistic);
                 await _eventAnalysis.EstimateProfit(listEvent, _bets);
                 await _eventAnalysis.ValuableBetNotification(listEvent, _email);
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); // Delay to avoid continuous execution
+                // Delay to avoid continuous execution
+                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); 
             
             }
         }
