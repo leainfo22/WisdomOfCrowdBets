@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Collections.Generic;
 using WisdomOfCrowndBets.Core.DTO;
 using WisdomOfCrowndBets.Core.DTO.Api;
 using WisdomOfCrowndBets.Core.DTO.Team;
 using WisdomOfCrowndBets.Core.Interfaces;
 using WisdomOfCrowndBets.Core.Interfaces.Analysis;
-using WisdomOfCrowndBets.Core.Services;
-using WisdomOfCrowndBets.Core.Services.Analysis;
+
 
 namespace WisdomOfCrowdBets
 {

@@ -1,12 +1,4 @@
-﻿using MathNet.Numerics.Distributions;
-using NPOI.Util;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WisdomOfCrowndBets.Core.DTO;
+﻿using WisdomOfCrowndBets.Core.DTO;
 using WisdomOfCrowndBets.Core.DTO.Api;
 using WisdomOfCrowndBets.Core.DTO.Team;
 using WisdomOfCrowndBets.Core.Interfaces;
